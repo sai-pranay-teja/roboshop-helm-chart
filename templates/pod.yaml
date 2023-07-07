@@ -12,7 +12,7 @@ metadata:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: cart
+  name: {{ .Values.component }}
   labels:
     component: {{ .Values.component }}
 spec:
