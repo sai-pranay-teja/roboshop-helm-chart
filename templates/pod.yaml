@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.component }}
+  annotations: 
+    eks.amazonaws.com/role-arn: arn:aws:iam::581798224530:role/role-for-eks
+
+  
+---
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cart
+  labels:
+    component: {{ .Values.component }}
+spec:
+  serviceAccountName: {{ .Values.component }}
+  containers:
+    - name: {{ .Values.component }}
+      image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.component }}:1.0.4
+      volumeMounts:
+      - mountPath: /params
+        name: params
+  initContainers:
+    - name: ssm-for-parameters
+      image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/aws-params:1.0.9
+      args: ["sample:jenkins_user"]
+      volumeMounts:
+      - mountPath: /params
+        name: params
+  volumes:
+  - name: params
+    emptyDir:
+      sizeLimit: 500Mi
+
+
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.component }}
+spec:
+  selector:
+    component: {{ .Values.component }}
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+
