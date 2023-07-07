@@ -8,7 +8,7 @@ spec:
   serviceAccountName: {{ .Values.component }}
   containers:
     - name: {{ .Values.component }}
-      image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.component }}:{{ .Values.component }}
+      image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.component }}:{{ .Values.appversion }}
       volumeMounts:
       - mountPath: /params
         name: params
