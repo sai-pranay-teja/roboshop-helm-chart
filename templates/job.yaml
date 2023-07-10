@@ -17,7 +17,7 @@
 #   backoffLimit: 1
 # {{- end }}
 
-{{- if .Values.schematype.create -}}
+{{- if .Values.schema.create -}}
 apiVersion: v1
 kind: Pod
 metadata:
