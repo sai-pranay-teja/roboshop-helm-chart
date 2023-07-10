@@ -1,21 +1,21 @@
-# {{- if .Values.schema.create -}}
-# apiVersion: batch/v1
-# kind: Job
-# metadata:
-#   name: {{ .Values.component }}-schema-loader
-#   labels:
-#     component: {{ .Values.component }}
-# spec:
-#   serviceAccountName: {{ .Values.component }}
-#   template:
-#     spec:
-#       containers:
-#         - name: Schema-load
-#           image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/schema-load:{{ .Values.appversion }}
-#           args: [ {{ .Values.schema.type }}, {{ .Values.component }} ]
-#       restartPolicy: Never
-#   backoffLimit: 1
-# {{- end }}
+{{- if .Values.schema.create -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .Values.component }}-schema-loader
+  labels:
+    component: {{ .Values.component }}
+spec:
+  serviceAccountName: {{ .Values.component }}
+  template:
+    spec:
+      containers:
+        - name: Schema-load
+          image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/schema-load:1.0.0
+          args: [ "{{ .Values.schema.type }}", "{{ .Values.component }}" ]
+      restartPolicy: Never
+  backoffLimit: 1
+{{- end }}
 
 # {{- if .Values.schema.create -}}
 # apiVersion: v1
