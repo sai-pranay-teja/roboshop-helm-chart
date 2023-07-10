@@ -11,7 +11,7 @@ spec:
       serviceAccountName: {{ .Values.component }}
       containers:
         - name: schema-load
-          image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/schema-load:1.0.0
+          image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/schema-load:1.0.1
           args: [ "{{ .Values.schema.type }}", "{{ .Values.component }}" ]
           env:
           - name: env
