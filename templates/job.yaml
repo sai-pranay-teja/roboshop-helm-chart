@@ -6,7 +6,6 @@ metadata:
   labels:
     component: {{ .Values.component }}
 spec:
-  serviceAccountName: {{ .Values.component }}
   template:
     spec:
       containers:
