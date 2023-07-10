@@ -1,4 +1,3 @@
-
 {{- if .Values.schema.create -}}
 apiVersion: v1
 kind: Pod
