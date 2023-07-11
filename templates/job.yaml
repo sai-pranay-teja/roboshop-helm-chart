@@ -6,7 +6,6 @@ metadata:
   labels:
     component: {{ .Values.component }}
   annotations:
-    {{- toYaml . | nindent 4 }}
     "helm.sh/hook": "pre-install"
 spec:
   template:
