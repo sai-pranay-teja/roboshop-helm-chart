@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "roboshop.fullname" . }}
+  name: {{ .Values.component }}
   labels:
     {{- include "roboshop.labels" . | nindent 4 }}
 spec:
@@ -20,6 +20,10 @@ spec:
       labels:
         {{- include "roboshop.selectorLabels" . | nindent 8 }}
     spec:
+      volumes:
+      - name: params
+        emptyDir:
+          sizeLimit: 500Mi
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -27,24 +31,34 @@ spec:
       serviceAccountName: {{ include "roboshop.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        - name: ssm-for-parameters
+          image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/aws-params:1.0.9
+          args: ["{{ .Values.params }}"]
+          volumeMounts:
+          - mountPath: /params
+            name: params
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Values.component }}
+          volumeMounts:
+          - mountPath: /params
+            name: params
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: 581798224530.dkr.ecr.us-east-1.amazonaws.com/{{ .Values.component }}:{{ .Values.appversion }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: {{ .Values.service.port }}
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: {{ .Values.service.port }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
