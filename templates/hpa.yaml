@@ -7,7 +7,7 @@ metadata:
     {{- include "roboshop.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
+    apiVersion: apps/v2
     kind: Deployment
     name: {{ .Values.component }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
